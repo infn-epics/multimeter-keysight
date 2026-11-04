@@ -1,0 +1,881 @@
+#=================================================================
+# Keysight 34465A Truevolt DMM — EPICS database (StreamDevice)
+#=================================================================
+# Macros
+#   P, R      PV prefix: records are named $(P):$(R):<NAME>
+#   PORT      asyn port of the instrument (drvAsynIPPort, TCP 5025)
+#   NELM      max readings per acquisition (TRIG:COUN x SAMP:COUN)   [1000]
+#   SCAN      acquisition scan rate (READ_ARR)                        [1 second]
+#   RB_SCAN   settings readback scan rate                             [5 second]
+#   ERR_SCAN  error queue poll rate                                   [1 second]
+#
+# Function index (FUNC / FUNC_RB):
+#   0 DCV  1 ACV  2 DCI  3 ACI  4 2W Ohm  5 4W Ohm
+#   6 Freq 7 Period  8 Continuity  9 Diode  10 Temperature  11 Capacitance
+#=================================================================
+
+#-----------------------------------------------------------------
+# Communication
+#-----------------------------------------------------------------
+record(asyn, "$(P):$(R):ASYN") {
+    field(DESC, "asyn port diagnostics")
+    field(PORT, "$(PORT)")
+    field(ADDR, "0")
+    field(OMAX, "256")
+    field(IMAX, "256")
+}
+
+#-----------------------------------------------------------------
+# Identification and housekeeping
+#-----------------------------------------------------------------
+record(stringin, "$(P):$(R):IDN_MFR") {
+    field(DESC, "Manufacturer")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getIdn($(P):$(R):) $(PORT)")
+    field(PINI, "YES")
+}
+record(stringin, "$(P):$(R):IDN_MODEL")  { field(DESC, "Model") }
+record(stringin, "$(P):$(R):IDN_SERIAL") { field(DESC, "Serial number") }
+record(stringin, "$(P):$(R):IDN_FW")     { field(DESC, "Firmware revision") }
+
+record(lsi, "$(P):$(R):ERR_MSG") {
+    field(DESC, "Last SCPI error message")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getError($(P):$(R):) $(PORT)")
+    field(SCAN, "$(ERR_SCAN=1 second)")
+    field(SIZV, "256")
+    field(FLNK, "$(P):$(R):ERR_LATCH")
+}
+record(longin, "$(P):$(R):ERR_CODE") {
+    field(DESC, "SCPI error code (live poll)")
+}
+
+# Latch the last non-zero error until CLEAR (*CLS) is pressed;
+# the live poll above shows "No error" again one cycle later.
+record(calcout, "$(P):$(R):ERR_LATCH") {
+    field(INPA, "$(P):$(R):ERR_CODE")
+    field(INPB, "$(P):$(R):ERR_CLR_REQ")
+    field(CALC, "A!=0||B")
+    field(OOPT, "When Non-zero")
+    field(OUT,  "$(P):$(R):ERR_LATCH_FAN.PROC PP")
+}
+record(fanout, "$(P):$(R):ERR_LATCH_FAN") {
+    field(SELM, "All")
+    field(LNK0, "$(P):$(R):LAST_ERR_CODE")
+    field(LNK1, "$(P):$(R):LAST_ERR_MSG")
+    field(LNK2, "$(P):$(R):ERR_CLR_DONE")
+}
+record(longin, "$(P):$(R):LAST_ERR_CODE") {
+    field(DESC, "Last SCPI error code (latched)")
+    field(INP,  "$(P):$(R):ERR_CODE")
+    field(HIGH, "1")
+    field(HSV,  "MINOR")
+    field(LOW,  "-1")
+    field(LSV,  "MINOR")
+}
+record(lsi, "$(P):$(R):LAST_ERR_MSG") {
+    field(DESC, "Last SCPI error msg (latched)")
+    field(INP,  "$(P):$(R):ERR_MSG")
+    field(SIZV, "256")
+}
+record(bo, "$(P):$(R):ERR_CLR_REQ") {
+    field(DESC, "Internal: clear latch request")
+}
+record(bo, "$(P):$(R):ERR_CLR_DONE") {
+    field(DESC, "Internal: reset clear request")
+    field(OUT,  "$(P):$(R):ERR_CLR_REQ PP")
+}
+# CLEAR: *CLS, then re-poll the queue and latch its "No error"
+record(seq, "$(P):$(R):ERR_CLR_SEQ") {
+    field(DOL0, "1")
+    field(LNK0, "$(P):$(R):ERR_CLR_REQ PP")
+    field(DOL1, "1")
+    field(LNK1, "$(P):$(R):ERR_MSG.PROC")
+}
+
+record(bi, "$(P):$(R):INPUT_TERM") {
+    field(DESC, "Front/rear terminals switch")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getInputTerm $(PORT)")
+    field(SCAN, "$(RB_SCAN=5 second)")
+    field(ZNAM, "Front")
+    field(ONAM, "Rear")
+}
+
+record(ai, "$(P):$(R):TEMP_INT") {
+    field(DESC, "Internal temperature")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getIntTemp $(PORT)")
+    field(SCAN, "10 second")
+    field(EGU,  "degC")
+    field(PREC, "2")
+}
+
+record(ai, "$(P):$(R):LINE_FREQ") {
+    field(DESC, "Power line frequency")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getLineFreq $(PORT)")
+    field(PINI, "YES")
+    field(EGU,  "Hz")
+    field(PREC, "0")
+}
+
+record(bo, "$(P):$(R):RESET") {
+    field(DESC, "*RST;*CLS")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto reset $(PORT)")
+    field(ZNAM, "Reset")
+    field(ONAM, "Reset")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bo, "$(P):$(R):CLEAR") {
+    field(DESC, "*CLS clear status/errors")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto clear $(PORT)")
+    field(ZNAM, "Clear")
+    field(ONAM, "Clear")
+    field(FLNK, "$(P):$(R):ERR_CLR_SEQ")
+}
+record(bo, "$(P):$(R):ABORT") {
+    field(DESC, "Abort measurement")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto abort $(PORT)")
+    field(ZNAM, "Abort")
+    field(ONAM, "Abort")
+}
+record(bo, "$(P):$(R):BEEP") {
+    field(DESC, "Beep")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto beep $(PORT)")
+    field(ZNAM, "Beep")
+    field(ONAM, "Beep")
+}
+
+record(bo, "$(P):$(R):DISP") {
+    field(DESC, "Front panel display")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setDisplay $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):DISP_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getDisplay $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+record(stringout, "$(P):$(R):DISP_TEXT") {
+    field(DESC, "Show text on display")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setDispText $(PORT)")
+}
+record(bo, "$(P):$(R):DISP_TEXT_CLR") {
+    field(DESC, "Clear display text")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto clrDispText $(PORT)")
+    field(ZNAM, "Clear")
+    field(ONAM, "Clear")
+}
+
+#-----------------------------------------------------------------
+# Measurement function
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):FUNC") {
+    field(DESC, "Measurement function")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setFunc $(PORT)")
+    field(ZRST, "DCV")
+    field(ONST, "ACV")
+    field(TWST, "DCI")
+    field(THST, "ACI")
+    field(FRST, "2W Ohm")
+    field(FVST, "4W Ohm")
+    field(SXST, "Freq")
+    field(SVST, "Period")
+    field(EIST, "Continuity")
+    field(NIST, "Diode")
+    field(TEST, "Temperature")
+    field(ELST, "Capacitance")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+
+record(mbbi, "$(P):$(R):FUNC_RB") {
+    field(DESC, "Measurement function RB")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getFunc $(PORT)")
+    field(ZRST, "DCV")
+    field(ONST, "ACV")
+    field(TWST, "DCI")
+    field(THST, "ACI")
+    field(FRST, "2W Ohm")
+    field(FVST, "4W Ohm")
+    field(SXST, "Freq")
+    field(SVST, "Period")
+    field(EIST, "Continuity")
+    field(NIST, "Diode")
+    field(TEST, "Temperature")
+    field(ELST, "Capacitance")
+    field(FLNK, "$(P):$(R):FUNC_PFX")
+}
+
+# SCPI subsystem of the active function, used by protocol redirection
+record(mbbi, "$(P):$(R):FUNC_PFX") {
+    field(DESC, "SCPI prefix of function")
+    field(INP,  "$(P):$(R):FUNC_RB MS")
+    field(ZRST, "VOLT:DC")
+    field(ONST, "VOLT:AC")
+    field(TWST, "CURR:DC")
+    field(THST, "CURR:AC")
+    field(FRST, "RES")
+    field(FVST, "FRES")
+    field(SXST, "FREQ")
+    field(SVST, "PER")
+    field(EIST, "CONT")
+    field(NIST, "DIOD")
+    field(TEST, "TEMP")
+    field(ELST, "CAP")
+    field(FLNK, "$(P):$(R):FUNC_UNIT")
+}
+
+# Engineering unit of the active function
+record(mbbi, "$(P):$(R):FUNC_UNIT") {
+    field(DESC, "Unit of function")
+    field(INP,  "$(P):$(R):FUNC_RB MS")
+    field(ZRST, "VDC")
+    field(ONST, "VAC")
+    field(TWST, "ADC")
+    field(THST, "AAC")
+    field(FRST, "Ohm")
+    field(FVST, "Ohm")
+    field(SXST, "Hz")
+    field(SVST, "s")
+    field(EIST, "Ohm")
+    field(NIST, "V")
+    field(TEST, "degC")
+    field(ELST, "F")
+    field(FLNK, "$(P):$(R):HAS_RANGE")
+}
+
+# Capability flags: bit N of the mask set => function N supports it.
+# Function-dependent records use them as SDIS (DISV=0), so commands
+# that the active function does not accept are never sent.
+record(calc, "$(P):$(R):HAS_RANGE") {
+    field(DESC, "Function has range")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # DCV ACV DCI ACI RES FRES CAP
+    field(CALC, "(2111>>A)&1")
+    field(FLNK, "$(P):$(R):HAS_NPLC")
+}
+record(calc, "$(P):$(R):HAS_NPLC") {
+    field(DESC, "Function has NPLC")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # DCV DCI RES FRES TEMP
+    field(CALC, "(1077>>A)&1")
+    field(FLNK, "$(P):$(R):HAS_AZ")
+}
+record(calc, "$(P):$(R):HAS_AZ") {
+    field(DESC, "Function has autozero")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # DCV DCI RES TEMP
+    field(CALC, "(1045>>A)&1")
+    field(FLNK, "$(P):$(R):HAS_NULL")
+}
+record(calc, "$(P):$(R):HAS_NULL") {
+    field(DESC, "Function has null")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # all except CONT, DIOD
+    field(CALC, "(3327>>A)&1")
+    field(FLNK, "$(P):$(R):HAS_IMP")
+}
+record(calc, "$(P):$(R):HAS_IMP") {
+    field(DESC, "Function has auto Zin")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # DCV
+    field(CALC, "A=0")
+    field(FLNK, "$(P):$(R):HAS_TERM")
+}
+record(calc, "$(P):$(R):HAS_TERM") {
+    field(DESC, "Function has terminals")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    # DCI ACI
+    field(CALC, "A=2||A=3")
+    field(FLNK, "$(P):$(R):HAS_TEMP")
+}
+record(calc, "$(P):$(R):HAS_TEMP") {
+    field(DESC, "Function is temperature")
+    field(INPA, "$(P):$(R):FUNC_RB")
+    field(CALC, "A=10")
+    field(FLNK, "$(P):$(R):EGU_VAL")
+}
+
+# Propagate unit to the EGU of the measurement records
+record(stringout, "$(P):$(R):EGU_VAL") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):VAL.EGU")
+    field(FLNK, "$(P):$(R):EGU_MEAN")
+}
+record(stringout, "$(P):$(R):EGU_MEAN") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):MEAN.EGU")
+    field(FLNK, "$(P):$(R):EGU_STD")
+}
+record(stringout, "$(P):$(R):EGU_STD") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):STD.EGU")
+    field(FLNK, "$(P):$(R):EGU_MIN")
+}
+record(stringout, "$(P):$(R):EGU_MIN") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):MIN.EGU")
+    field(FLNK, "$(P):$(R):EGU_MAX")
+}
+record(stringout, "$(P):$(R):EGU_MAX") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):MAX.EGU")
+    field(FLNK, "$(P):$(R):EGU_RANGE")
+}
+record(stringout, "$(P):$(R):EGU_RANGE") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):RANGE_RB.EGU")
+    field(FLNK, "$(P):$(R):EGU_ARR")
+}
+record(stringout, "$(P):$(R):EGU_ARR") {
+    field(DOL,  "$(P):$(R):FUNC_UNIT")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):READ_ARR.EGU")
+    field(FLNK, "$(P):$(R):RB_FAN")
+}
+
+#-----------------------------------------------------------------
+# Settings readback
+#   REFRESH -> FUNC_RB -> FUNC_PFX -> FUNC_UNIT -> HAS_* -> EGU_* -> RB_FAN
+# Every setter forward-links to REFRESH.
+#-----------------------------------------------------------------
+record(fanout, "$(P):$(R):REFRESH") {
+    field(DESC, "Read back all settings")
+    field(SCAN, "$(RB_SCAN=5 second)")
+    field(PINI, "YES")
+    field(LNK0, "$(P):$(R):FUNC_RB")
+}
+
+record(fanout, "$(P):$(R):RB_FAN") {
+    field(SELM, "All")
+    field(LNK0, "$(P):$(R):RANGE_RB")
+    field(LNK1, "$(P):$(R):AUTO_RB")
+    field(LNK2, "$(P):$(R):NPLC_RB")
+    field(LNK3, "$(P):$(R):AZ_RB")
+    field(LNK4, "$(P):$(R):NULL_RB")
+    field(LNK5, "$(P):$(R):NULL_VAL_RB")
+    field(LNK6, "$(P):$(R):IMP_AUTO_RB")
+    field(LNK7, "$(P):$(R):TERM_RB")
+    field(LNK8, "$(P):$(R):TEMP_TYPE_RB")
+    field(LNK9, "$(P):$(R):TRIG_SRC_RB")
+    field(LNKA, "$(P):$(R):TRIG_SLOPE_RB")
+    field(LNKB, "$(P):$(R):TRIG_DEL_RB")
+    field(LNKC, "$(P):$(R):TRIG_DEL_AUTO_RB")
+    field(LNKD, "$(P):$(R):TRIG_COUNT_RB")
+    field(LNKE, "$(P):$(R):SAMP_COUNT_RB")
+    field(LNKF, "$(P):$(R):DISP_RB")
+}
+
+#-----------------------------------------------------------------
+# Range
+#-----------------------------------------------------------------
+record(ao, "$(P):$(R):RANGE") {
+    field(DESC, "Manual range (disables auto)")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setRange($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_RANGE")
+    field(DISV, "0")
+    field(PREC, "3")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(ai, "$(P):$(R):RANGE_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getRange($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_RANGE")
+    field(DISV, "0")
+    field(PREC, "3")
+}
+
+record(bo, "$(P):$(R):AUTO") {
+    field(DESC, "Autorange")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setAutoRange($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_RANGE")
+    field(DISV, "0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):AUTO_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getAutoRange($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_RANGE")
+    field(DISV, "0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+#-----------------------------------------------------------------
+# Integration time
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):NPLC") {
+    field(DESC, "Integration time (PLC)")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setNplc($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NPLC")
+    field(DISV, "0")
+    field(ZRST, "0.02")
+    field(ONST, "0.06")
+    field(TWST, "0.2")
+    field(THST, "1")
+    field(FRST, "10")
+    field(FVST, "100")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(ai, "$(P):$(R):NPLC_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getNplc($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NPLC")
+    field(DISV, "0")
+    field(EGU,  "PLC")
+    field(PREC, "2")
+}
+
+#-----------------------------------------------------------------
+# Autozero
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):AZ") {
+    field(DESC, "Autozero")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setAutoZero($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_AZ")
+    field(DISV, "0")
+    field(ZRST, "Off")
+    field(ONST, "On")
+    field(TWST, "Once")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):AZ_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getAutoZero($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_AZ")
+    field(DISV, "0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+#-----------------------------------------------------------------
+# Null (relative) measurement
+#-----------------------------------------------------------------
+record(bo, "$(P):$(R):NULL") {
+    field(DESC, "Null (relative) enable")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setNull($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NULL")
+    field(DISV, "0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):NULL_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getNull($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NULL")
+    field(DISV, "0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+record(ao, "$(P):$(R):NULL_VAL") {
+    field(DESC, "Null offset value")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setNullVal($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NULL")
+    field(DISV, "0")
+    field(PREC, "6")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(ai, "$(P):$(R):NULL_VAL_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getNullVal($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_NULL")
+    field(DISV, "0")
+    field(PREC, "6")
+}
+
+#-----------------------------------------------------------------
+# DCV input impedance
+#-----------------------------------------------------------------
+record(bo, "$(P):$(R):IMP_AUTO") {
+    field(DESC, "DCV auto input impedance")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setImpAuto $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_IMP")
+    field(DISV, "0")
+    field(ZNAM, "10 MOhm")
+    field(ONAM, "Auto (>10 GOhm)")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):IMP_AUTO_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getImpAuto $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_IMP")
+    field(DISV, "0")
+    field(ZNAM, "10 MOhm")
+    field(ONAM, "Auto (>10 GOhm)")
+}
+
+#-----------------------------------------------------------------
+# Current input terminals (DCI / ACI)
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):TERM") {
+    field(DESC, "Current terminals")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTerm($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_TERM")
+    field(DISV, "0")
+    field(ZRST, "3 A")
+    field(ZRVL, "3")
+    field(ONST, "10 A")
+    field(ONVL, "10")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(mbbi, "$(P):$(R):TERM_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTerm($(P):$(R):) $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_TERM")
+    field(DISV, "0")
+    field(ZRST, "3 A")
+    field(ZRVL, "3")
+    field(ONST, "10 A")
+    field(ONVL, "10")
+}
+
+#-----------------------------------------------------------------
+# Temperature transducer
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):TEMP_TYPE") {
+    field(DESC, "Temperature transducer")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTempType $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_TEMP")
+    field(DISV, "0")
+    field(ZRST, "4W RTD")
+    field(ONST, "2W RTD")
+    field(TWST, "4W Thermistor")
+    field(THST, "2W Thermistor")
+    field(FRST, "Thermocouple")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(mbbi, "$(P):$(R):TEMP_TYPE_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTempType $(PORT)")
+    field(SDIS, "$(P):$(R):HAS_TEMP")
+    field(DISV, "0")
+    field(ZRST, "4W RTD")
+    field(ONST, "2W RTD")
+    field(TWST, "4W Thermistor")
+    field(THST, "2W Thermistor")
+    field(FRST, "Thermocouple")
+}
+
+#-----------------------------------------------------------------
+# Trigger and sample count
+#-----------------------------------------------------------------
+record(mbbo, "$(P):$(R):TRIG_SRC") {
+    field(DESC, "Trigger source")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTrigSrc $(PORT)")
+    field(ZRST, "Immediate")
+    field(ONST, "External")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(mbbi, "$(P):$(R):TRIG_SRC_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTrigSrc $(PORT)")
+    field(ZRST, "Immediate")
+    field(ONST, "External")
+    field(TWST, "Bus")
+    field(THST, "Internal")
+}
+
+record(mbbo, "$(P):$(R):TRIG_SLOPE") {
+    field(DESC, "Ext trigger slope")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTrigSlope $(PORT)")
+    field(ZRST, "Positive")
+    field(ONST, "Negative")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(mbbi, "$(P):$(R):TRIG_SLOPE_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTrigSlope $(PORT)")
+    field(ZRST, "Positive")
+    field(ONST, "Negative")
+}
+
+record(ao, "$(P):$(R):TRIG_DEL") {
+    field(DESC, "Trigger delay (disables auto)")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTrigDel $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "6")
+    field(DRVL, "0")
+    field(DRVH, "3600")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(ai, "$(P):$(R):TRIG_DEL_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTrigDel $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "6")
+}
+
+record(bo, "$(P):$(R):TRIG_DEL_AUTO") {
+    field(DESC, "Auto trigger delay")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTrigDelAuto $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(bi, "$(P):$(R):TRIG_DEL_AUTO_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTrigDelAuto $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+# TRIG_COUNT x SAMP_COUNT must not exceed NELM
+record(longout, "$(P):$(R):TRIG_COUNT") {
+    field(DESC, "Triggers per READ?")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setTrigCount $(PORT)")
+    field(VAL,  "1")
+    field(DRVL, "1")
+    field(DRVH, "$(NELM=1000)")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(ai, "$(P):$(R):TRIG_COUNT_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getTrigCount $(PORT)")
+    field(PREC, "0")
+}
+
+record(longout, "$(P):$(R):SAMP_COUNT") {
+    field(DESC, "Samples per trigger")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto setSampCount $(PORT)")
+    field(DRVL, "1")
+    field(DRVH, "$(NELM=1000)")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(longin, "$(P):$(R):SAMP_COUNT_RB") {
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getSampCount $(PORT)")
+}
+
+#-----------------------------------------------------------------
+# Acquisition
+#   READ_ARR (READ?) -> STATS (aSub) -> VAL, MEAN, STD, MIN, MAX, NVALID, OVLD
+#   Change READ_ARR.SCAN to set the rate, or set it Passive and use TRIGGER.
+#-----------------------------------------------------------------
+record(bo, "$(P):$(R):ACQ_EN") {
+    field(DESC, "Enable periodic acquisition")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(VAL,  "$(ACQ_EN=1)")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P):$(R):TRIGGER") {
+    field(DESC, "Single acquisition")
+    field(OUT,  "$(P):$(R):READ_ARR.PROC PP")
+    field(ZNAM, "Acquire")
+    field(ONAM, "Acquire")
+}
+
+record(waveform, "$(P):$(R):READ_ARR") {
+    field(DESC, "Readings of last READ?")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto readArray $(PORT)")
+    field(SCAN, "$(SCAN=1 second)")
+    field(SDIS, "$(P):$(R):ACQ_EN")
+    field(DISV, "0")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NELM=1000)")
+    field(PREC, "7")
+    field(FLNK, "$(P):$(R):STATS")
+}
+
+record(aSub, "$(P):$(R):STATS") {
+    field(DESC, "Reading statistics")
+    field(SNAM, "keysightStats")
+    field(INPA, "$(P):$(R):READ_ARR NPP MS")
+    field(FTA,  "DOUBLE")
+    field(NOA,  "$(NELM=1000)")
+    field(FTVA, "DOUBLE")
+    field(FTVB, "DOUBLE")
+    field(FTVC, "DOUBLE")
+    field(FTVD, "DOUBLE")
+    field(FTVE, "DOUBLE")
+    field(FTVF, "LONG")
+    field(FTVG, "LONG")
+    field(OUTA, "$(P):$(R):VAL PP MS")
+    field(OUTB, "$(P):$(R):MEAN PP MS")
+    field(OUTC, "$(P):$(R):STD PP MS")
+    field(OUTD, "$(P):$(R):MIN PP MS")
+    field(OUTE, "$(P):$(R):MAX PP MS")
+    field(OUTF, "$(P):$(R):NVALID PP MS")
+    field(OUTG, "$(P):$(R):OVLD PP MS")
+    field(FLNK, "$(P):$(R):CONV_FAN")
+}
+
+record(ai, "$(P):$(R):VAL") {
+    field(DESC, "Last reading")
+    field(PREC, "7")
+}
+record(ai, "$(P):$(R):MEAN") {
+    field(DESC, "Mean of readings")
+    field(PREC, "7")
+}
+record(ai, "$(P):$(R):STD") {
+    field(DESC, "Std deviation of readings")
+    field(PREC, "7")
+}
+record(ai, "$(P):$(R):MIN") {
+    field(DESC, "Min of readings")
+    field(PREC, "7")
+}
+record(ai, "$(P):$(R):MAX") {
+    field(DESC, "Max of readings")
+    field(PREC, "7")
+}
+record(longin, "$(P):$(R):NVALID") {
+    field(DESC, "Valid readings in array")
+}
+record(bi, "$(P):$(R):OVLD") {
+    field(DESC, "Overload in last READ?")
+    field(ZNAM, "OK")
+    field(ONAM, "OVERLOAD")
+    field(OSV,  "MAJOR")
+}
+
+#-----------------------------------------------------------------
+# User conversion to a derived quantity
+#   CONV_x = x * CONV_FACTOR + CONV_OFFSET     (x = VAL, MEAN, MIN, MAX)
+#   CONV_STD = STD * |CONV_FACTOR|
+# e.g. charge from an integrator output: FACTOR = C[F] * 1e12, EGU = pC
+# Recomputed after every acquisition and when factor/offset change.
+#-----------------------------------------------------------------
+record(ao, "$(P):$(R):CONV_FACTOR") {
+    field(DESC, "Conversion factor")
+    field(VAL,  "$(CONV_FACTOR=1)")
+    field(PREC, "6")
+    field(PINI, "YES")
+    field(FLNK, "$(P):$(R):CONV_FAN")
+}
+record(ao, "$(P):$(R):CONV_OFFSET") {
+    field(DESC, "Conversion offset")
+    field(VAL,  "$(CONV_OFFSET=0)")
+    field(PREC, "6")
+    field(PINI, "YES")
+    field(FLNK, "$(P):$(R):CONV_FAN")
+}
+record(stringout, "$(P):$(R):CONV_EGU") {
+    field(DESC, "Unit of converted value")
+    field(VAL,  "$(CONV_EGU=)")
+    field(PINI, "YES")
+    field(FLNK, "$(P):$(R):CEGU_VAL")
+}
+
+record(fanout, "$(P):$(R):CONV_FAN") {
+    field(SELM, "All")
+    field(LNK0, "$(P):$(R):CONV_VAL")
+    field(LNK1, "$(P):$(R):CONV_MEAN")
+    field(LNK2, "$(P):$(R):CONV_STD")
+    field(LNK3, "$(P):$(R):CONV_MIN")
+    field(LNK4, "$(P):$(R):CONV_MAX")
+}
+
+record(calc, "$(P):$(R):CONV_VAL") {
+    field(DESC, "Converted last reading")
+    field(INPA, "$(P):$(R):VAL MS")
+    field(INPF, "$(P):$(R):CONV_FACTOR")
+    field(INPG, "$(P):$(R):CONV_OFFSET")
+    field(CALC, "A*F+G")
+    field(PREC, "$(CONV_PREC=4)")
+}
+record(calc, "$(P):$(R):CONV_MEAN") {
+    field(DESC, "Converted mean")
+    field(INPA, "$(P):$(R):MEAN MS")
+    field(INPF, "$(P):$(R):CONV_FACTOR")
+    field(INPG, "$(P):$(R):CONV_OFFSET")
+    field(CALC, "A*F+G")
+    field(PREC, "$(CONV_PREC=4)")
+}
+record(calc, "$(P):$(R):CONV_STD") {
+    field(DESC, "Converted std deviation")
+    field(INPA, "$(P):$(R):STD MS")
+    field(INPF, "$(P):$(R):CONV_FACTOR")
+    field(CALC, "A*ABS(F)")
+    field(PREC, "$(CONV_PREC=4)")
+}
+# a negative factor swaps min and max
+record(calc, "$(P):$(R):CONV_MIN") {
+    field(DESC, "Converted min")
+    field(INPA, "$(P):$(R):MIN MS")
+    field(INPB, "$(P):$(R):MAX MS")
+    field(INPF, "$(P):$(R):CONV_FACTOR")
+    field(INPG, "$(P):$(R):CONV_OFFSET")
+    field(CALC, "MIN(A*F+G,B*F+G)")
+    field(PREC, "$(CONV_PREC=4)")
+}
+record(calc, "$(P):$(R):CONV_MAX") {
+    field(DESC, "Converted max")
+    field(INPA, "$(P):$(R):MIN MS")
+    field(INPB, "$(P):$(R):MAX MS")
+    field(INPF, "$(P):$(R):CONV_FACTOR")
+    field(INPG, "$(P):$(R):CONV_OFFSET")
+    field(CALC, "MAX(A*F+G,B*F+G)")
+    field(PREC, "$(CONV_PREC=4)")
+}
+
+# Propagate CONV_EGU to the converted records
+record(stringout, "$(P):$(R):CEGU_VAL") {
+    field(DOL,  "$(P):$(R):CONV_EGU")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):CONV_VAL.EGU")
+    field(FLNK, "$(P):$(R):CEGU_MEAN")
+}
+record(stringout, "$(P):$(R):CEGU_MEAN") {
+    field(DOL,  "$(P):$(R):CONV_EGU")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):CONV_MEAN.EGU")
+    field(FLNK, "$(P):$(R):CEGU_STD")
+}
+record(stringout, "$(P):$(R):CEGU_STD") {
+    field(DOL,  "$(P):$(R):CONV_EGU")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):CONV_STD.EGU")
+    field(FLNK, "$(P):$(R):CEGU_MIN")
+}
+record(stringout, "$(P):$(R):CEGU_MIN") {
+    field(DOL,  "$(P):$(R):CONV_EGU")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):CONV_MIN.EGU")
+    field(FLNK, "$(P):$(R):CEGU_MAX")
+}
+record(stringout, "$(P):$(R):CEGU_MAX") {
+    field(DOL,  "$(P):$(R):CONV_EGU")
+    field(OMSL, "closed_loop")
+    field(OUT,  "$(P):$(R):CONV_MAX.EGU")
+}

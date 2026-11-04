@@ -1,0 +1,1691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display version="2.0.0">
+  <name>Keysight 34465A</name>
+  <macros>
+    <P>KEYSIGHT</P>
+    <R>DMM1</R>
+  </macros>
+  <width>1000</width>
+  <height>845</height>
+  <grid_step_x>5</grid_step_x>
+  <grid_step_y>5</grid_step_y>
+  <widget type="label" version="2.0.0">
+    <name>label_1</name>
+    <text>Keysight 34465A Truevolt DMM — $(P):$(R)</text>
+    <width>1000</width>
+    <height>40</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="18.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="255" green="255" blue="255">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="40" green="60" blue="110">
+      </color>
+    </background_color>
+    <transparent>false</transparent>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_2</name>
+    <text>Model:</text>
+    <x>10</x>
+    <y>48</y>
+    <width>50</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_3</name>
+    <pv_name>$(P):$(R):IDN_MODEL</pv_name>
+    <x>60</x>
+    <y>48</y>
+    <width>80</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_4</name>
+    <text>S/N:</text>
+    <x>150</x>
+    <y>48</y>
+    <width>50</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_5</name>
+    <pv_name>$(P):$(R):IDN_SERIAL</pv_name>
+    <x>190</x>
+    <y>48</y>
+    <width>110</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_6</name>
+    <text>FW:</text>
+    <x>310</x>
+    <y>48</y>
+    <width>30</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_7</name>
+    <pv_name>$(P):$(R):IDN_FW</pv_name>
+    <x>340</x>
+    <y>48</y>
+    <width>260</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_8</name>
+    <text>Terminals:</text>
+    <x>615</x>
+    <y>48</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_9</name>
+    <pv_name>$(P):$(R):INPUT_TERM</pv_name>
+    <x>685</x>
+    <y>48</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_10</name>
+    <text>Int. temp:</text>
+    <x>770</x>
+    <y>48</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_11</name>
+    <pv_name>$(P):$(R):TEMP_INT</pv_name>
+    <x>840</x>
+    <y>48</y>
+    <width>80</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_12</name>
+    <text>Conn:</text>
+    <x>925</x>
+    <y>48</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="led" version="2.0.0">
+    <name>led_13</name>
+    <pv_name>$(P):$(R):ASYN.CNCT</pv_name>
+    <x>965</x>
+    <y>48</y>
+    <off_color>
+      <color red="255" green="0" blue="0">
+      </color>
+    </off_color>
+    <on_color>
+      <color red="0" green="200" blue="0">
+      </color>
+    </on_color>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Measurement</name>
+    <x>10</x>
+    <y>75</y>
+    <width>480</width>
+    <height>220</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_15</name>
+    <pv_name>$(P):$(R):VAL</pv_name>
+    <x>25</x>
+    <y>100</y>
+    <width>330</width>
+    <height>60</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="30.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color name="OK" red="0" green="255" blue="0">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="20" green="20" blue="20">
+      </color>
+    </background_color>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_16</name>
+    <pv_name>$(P):$(R):FUNC_RB</pv_name>
+    <x>360</x>
+    <y>100</y>
+    <width>115</width>
+    <height>60</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="16.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="0" green="200" blue="255">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="20" green="20" blue="20">
+      </color>
+    </background_color>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_17</name>
+    <text>Mean</text>
+    <x>25</x>
+    <y>170</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_18</name>
+    <pv_name>$(P):$(R):MEAN</pv_name>
+    <x>85</x>
+    <y>170</y>
+    <width>160</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_19</name>
+    <text>Std dev</text>
+    <x>255</x>
+    <y>170</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_20</name>
+    <pv_name>$(P):$(R):STD</pv_name>
+    <x>315</x>
+    <y>170</y>
+    <width>160</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_21</name>
+    <text>Min</text>
+    <x>25</x>
+    <y>195</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_22</name>
+    <pv_name>$(P):$(R):MIN</pv_name>
+    <x>85</x>
+    <y>195</y>
+    <width>160</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_23</name>
+    <text>Max</text>
+    <x>255</x>
+    <y>195</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_24</name>
+    <pv_name>$(P):$(R):MAX</pv_name>
+    <x>315</x>
+    <y>195</y>
+    <width>160</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_25</name>
+    <text>N valid</text>
+    <x>25</x>
+    <y>225</y>
+    <width>80</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_26</name>
+    <pv_name>$(P):$(R):NVALID</pv_name>
+    <x>85</x>
+    <y>225</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_27</name>
+    <text>Overload</text>
+    <x>255</x>
+    <y>225</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="led" version="2.0.0">
+    <name>led_28</name>
+    <pv_name>$(P):$(R):OVLD</pv_name>
+    <x>320</x>
+    <y>225</y>
+    <off_color>
+      <color red="0" green="160" blue="0">
+      </color>
+    </off_color>
+    <on_color>
+      <color red="255" green="0" blue="0">
+      </color>
+    </on_color>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_29</name>
+    <text>Scan</text>
+    <x>25</x>
+    <y>255</y>
+    <width>90</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_30</name>
+    <pv_name>$(P):$(R):READ_ARR.SCAN</pv_name>
+    <x>85</x>
+    <y>255</y>
+    <width>120</width>
+    <height>20</height>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_31</name>
+    <pv_name>$(P):$(R):ACQ_EN</pv_name>
+    <x>210</x>
+    <y>255</y>
+    <width>90</width>
+    <height>20</height>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_32</name>
+    <actions>
+      <action type="write_pv">
+        <description>Acquire</description>
+        <pv_name>$(P):$(R):TRIGGER</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):TRIGGER</pv_name>
+    <text>Acquire</text>
+    <x>305</x>
+    <y>253</y>
+    <width>80</width>
+    <height>24</height>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_33</name>
+    <actions>
+      <action type="write_pv">
+        <description>Abort</description>
+        <pv_name>$(P):$(R):ABORT</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):ABORT</pv_name>
+    <text>Abort</text>
+    <x>390</x>
+    <y>253</y>
+    <width>80</width>
+    <height>24</height>
+    <background_color>
+      <color red="230" green="180" blue="180">
+      </color>
+    </background_color>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Configuration (setpoint | readback)</name>
+    <x>500</x>
+    <y>75</y>
+    <width>490</width>
+    <height>400</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_35</name>
+    <text>Function</text>
+    <x>515</x>
+    <y>100</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_36</name>
+    <pv_name>$(P):$(R):FUNC</pv_name>
+    <x>640</x>
+    <y>100</y>
+    <width>120</width>
+    <height>20</height>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_37</name>
+    <pv_name>$(P):$(R):FUNC_RB</pv_name>
+    <x>765</x>
+    <y>100</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_38</name>
+    <text>Autorange</text>
+    <x>515</x>
+    <y>125</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_39</name>
+    <pv_name>$(P):$(R):AUTO</pv_name>
+    <x>640</x>
+    <y>125</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_RANGE</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_40</name>
+    <pv_name>$(P):$(R):AUTO_RB</pv_name>
+    <x>765</x>
+    <y>125</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_RANGE</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_41</name>
+    <text>Range</text>
+    <x>515</x>
+    <y>150</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_42</name>
+    <pv_name>$(P):$(R):RANGE</pv_name>
+    <x>640</x>
+    <y>150</y>
+    <width>120</width>
+    <show_units>false</show_units>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_RANGE</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_43</name>
+    <pv_name>$(P):$(R):RANGE_RB</pv_name>
+    <x>765</x>
+    <y>150</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_RANGE</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_44</name>
+    <text>NPLC</text>
+    <x>515</x>
+    <y>175</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_45</name>
+    <pv_name>$(P):$(R):NPLC</pv_name>
+    <x>640</x>
+    <y>175</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NPLC</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_46</name>
+    <pv_name>$(P):$(R):NPLC_RB</pv_name>
+    <x>765</x>
+    <y>175</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NPLC</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_47</name>
+    <text>Autozero</text>
+    <x>515</x>
+    <y>200</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_48</name>
+    <pv_name>$(P):$(R):AZ</pv_name>
+    <x>640</x>
+    <y>200</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_AZ</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_49</name>
+    <pv_name>$(P):$(R):AZ_RB</pv_name>
+    <x>765</x>
+    <y>200</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_AZ</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_50</name>
+    <text>Null</text>
+    <x>515</x>
+    <y>225</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_51</name>
+    <pv_name>$(P):$(R):NULL</pv_name>
+    <x>640</x>
+    <y>225</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NULL</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_52</name>
+    <pv_name>$(P):$(R):NULL_RB</pv_name>
+    <x>765</x>
+    <y>225</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NULL</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_53</name>
+    <text>Null value</text>
+    <x>515</x>
+    <y>250</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_54</name>
+    <pv_name>$(P):$(R):NULL_VAL</pv_name>
+    <x>640</x>
+    <y>250</y>
+    <width>120</width>
+    <show_units>false</show_units>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NULL</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_55</name>
+    <pv_name>$(P):$(R):NULL_VAL_RB</pv_name>
+    <x>765</x>
+    <y>250</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_NULL</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_56</name>
+    <text>DCV input Z</text>
+    <x>515</x>
+    <y>275</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_57</name>
+    <pv_name>$(P):$(R):IMP_AUTO</pv_name>
+    <x>640</x>
+    <y>275</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_IMP</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_58</name>
+    <pv_name>$(P):$(R):IMP_AUTO_RB</pv_name>
+    <x>765</x>
+    <y>275</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_IMP</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_59</name>
+    <text>Current jack</text>
+    <x>515</x>
+    <y>300</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_60</name>
+    <pv_name>$(P):$(R):TERM</pv_name>
+    <x>640</x>
+    <y>300</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_TERM</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_61</name>
+    <pv_name>$(P):$(R):TERM_RB</pv_name>
+    <x>765</x>
+    <y>300</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_TERM</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_62</name>
+    <text>Temp sensor</text>
+    <x>515</x>
+    <y>325</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_63</name>
+    <pv_name>$(P):$(R):TEMP_TYPE</pv_name>
+    <x>640</x>
+    <y>325</y>
+    <width>120</width>
+    <height>20</height>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_TEMP</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_64</name>
+    <pv_name>$(P):$(R):TEMP_TYPE_RB</pv_name>
+    <x>765</x>
+    <y>325</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+    <rules>
+      <rule name="enable" prop_id="enabled" out_exp="false">
+        <exp bool_exp="pv0 == 0">
+          <value>false</value>
+        </exp>
+        <pv_name>$(P):$(R):HAS_TEMP</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_65</name>
+    <text>Trigger</text>
+    <x>515</x>
+    <y>355</y>
+    <width>460</width>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_66</name>
+    <text>Source</text>
+    <x>515</x>
+    <y>377</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_67</name>
+    <pv_name>$(P):$(R):TRIG_SRC</pv_name>
+    <x>640</x>
+    <y>377</y>
+    <width>120</width>
+    <height>20</height>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_68</name>
+    <pv_name>$(P):$(R):TRIG_SRC_RB</pv_name>
+    <x>765</x>
+    <y>377</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_69</name>
+    <text>Slope</text>
+    <x>515</x>
+    <y>402</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_70</name>
+    <pv_name>$(P):$(R):TRIG_SLOPE</pv_name>
+    <x>640</x>
+    <y>402</y>
+    <width>120</width>
+    <height>20</height>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_71</name>
+    <pv_name>$(P):$(R):TRIG_SLOPE_RB</pv_name>
+    <x>765</x>
+    <y>402</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_72</name>
+    <text>Auto delay</text>
+    <x>515</x>
+    <y>427</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_73</name>
+    <pv_name>$(P):$(R):TRIG_DEL_AUTO</pv_name>
+    <x>640</x>
+    <y>427</y>
+    <width>120</width>
+    <height>20</height>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_74</name>
+    <pv_name>$(P):$(R):TRIG_DEL_AUTO_RB</pv_name>
+    <x>765</x>
+    <y>427</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_75</name>
+    <text>Delay</text>
+    <x>515</x>
+    <y>452</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_76</name>
+    <pv_name>$(P):$(R):TRIG_DEL</pv_name>
+    <x>640</x>
+    <y>452</y>
+    <width>120</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_77</name>
+    <pv_name>$(P):$(R):TRIG_DEL_RB</pv_name>
+    <x>765</x>
+    <y>452</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Sampling (trigger count x sample count &lt;= NELM)</name>
+    <x>500</x>
+    <y>480</y>
+    <width>490</width>
+    <height>85</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_79</name>
+    <text>Trigger count</text>
+    <x>515</x>
+    <y>505</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_80</name>
+    <pv_name>$(P):$(R):TRIG_COUNT</pv_name>
+    <x>640</x>
+    <y>505</y>
+    <width>120</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_81</name>
+    <pv_name>$(P):$(R):TRIG_COUNT_RB</pv_name>
+    <x>765</x>
+    <y>505</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_82</name>
+    <text>Samples/trigger</text>
+    <x>515</x>
+    <y>530</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_83</name>
+    <pv_name>$(P):$(R):SAMP_COUNT</pv_name>
+    <x>640</x>
+    <y>530</y>
+    <width>120</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_84</name>
+    <pv_name>$(P):$(R):SAMP_COUNT_RB</pv_name>
+    <x>765</x>
+    <y>530</y>
+    <width>120</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Readings of last acquisition (READ_ARR)</name>
+    <x>10</x>
+    <y>300</y>
+    <width>480</width>
+    <height>265</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="xyplot" version="3.0.0">
+    <name>xyplot_86</name>
+    <x>20</x>
+    <y>325</y>
+    <width>460</width>
+    <height>230</height>
+    <show_legend>false</show_legend>
+    <x_axis>
+      <title>Sample</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>100.0</maximum>
+      <show_grid>true</show_grid>
+      <title_font>
+        <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
+        </font>
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+        </font>
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Reading</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>0.0</minimum>
+        <maximum>1.0</maximum>
+        <show_grid>true</show_grid>
+        <title_font>
+          <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
+          </font>
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+          </font>
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color name="Text" red="0" green="0" blue="0">
+          </color>
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>READ_ARR</name>
+        <x_pv></x_pv>
+        <y_pv>$(P):$(R):READ_ARR</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>2</trace_type>
+        <color>
+          <color red="0" green="90" blue="200">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>1</point_type>
+        <point_size>5</point_size>
+        <visible>true</visible>
+      </trace>
+    </traces>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Instrument</name>
+    <x>10</x>
+    <y>570</y>
+    <width>980</width>
+    <height>150</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_88</name>
+    <text>Display</text>
+    <x>25</x>
+    <y>595</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>combo_89</name>
+    <pv_name>$(P):$(R):DISP</pv_name>
+    <x>95</x>
+    <y>595</y>
+    <width>90</width>
+    <height>20</height>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_90</name>
+    <pv_name>$(P):$(R):DISP_RB</pv_name>
+    <x>190</x>
+    <y>595</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_91</name>
+    <text>Display text</text>
+    <x>265</x>
+    <y>595</y>
+    <width>80</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_92</name>
+    <pv_name>$(P):$(R):DISP_TEXT</pv_name>
+    <x>345</x>
+    <y>595</y>
+    <width>250</width>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_93</name>
+    <actions>
+      <action type="write_pv">
+        <description>Clear text</description>
+        <pv_name>$(P):$(R):DISP_TEXT_CLR</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):DISP_TEXT_CLR</pv_name>
+    <text>Clear text</text>
+    <x>600</x>
+    <y>593</y>
+    <width>90</width>
+    <height>24</height>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_94</name>
+    <text>Line freq</text>
+    <x>705</x>
+    <y>595</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_95</name>
+    <pv_name>$(P):$(R):LINE_FREQ</pv_name>
+    <x>775</x>
+    <y>595</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_96</name>
+    <actions>
+      <action type="write_pv">
+        <description>Beep</description>
+        <pv_name>$(P):$(R):BEEP</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):BEEP</pv_name>
+    <text>Beep</text>
+    <x>860</x>
+    <y>593</y>
+    <width>50</width>
+    <height>24</height>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_97</name>
+    <actions>
+      <action type="write_pv">
+        <description>*RST</description>
+        <pv_name>$(P):$(R):RESET</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):RESET</pv_name>
+    <text>*RST</text>
+    <x>915</x>
+    <y>593</y>
+    <width>60</width>
+    <height>24</height>
+    <background_color>
+      <color red="230" green="180" blue="180">
+      </color>
+    </background_color>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_98</name>
+    <text>Last error</text>
+    <x>25</x>
+    <y>630</y>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_99</name>
+    <pv_name>$(P):$(R):LAST_ERR_CODE</pv_name>
+    <x>125</x>
+    <y>630</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_100</name>
+    <pv_name>$(P):$(R):LAST_ERR_MSG</pv_name>
+    <x>190</x>
+    <y>630</y>
+    <width>680</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>6</format>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>action_button_101</name>
+    <actions>
+      <action type="write_pv">
+        <description>Clear (*CLS)</description>
+        <pv_name>$(P):$(R):CLEAR</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):$(R):CLEAR</pv_name>
+    <text>Clear (*CLS)</text>
+    <x>880</x>
+    <y>628</y>
+    <width>95</width>
+    <height>24</height>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_102</name>
+    <text>Live poll</text>
+    <x>25</x>
+    <y>660</y>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_103</name>
+    <pv_name>$(P):$(R):ERR_CODE</pv_name>
+    <x>125</x>
+    <y>660</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_104</name>
+    <pv_name>$(P):$(R):ERR_MSG</pv_name>
+    <x>190</x>
+    <y>660</y>
+    <width>680</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>6</format>
+    <show_units>false</show_units>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_105</name>
+    <text>Greyed-out settings are not supported by the active function. Use TRIGGER with Scan = Passive for on-demand readings.</text>
+    <x>25</x>
+    <y>690</y>
+    <width>900</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="100" green="100" blue="100">
+      </color>
+    </foreground_color>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Conversion:  CONV = reading x Factor + Offset   (Std: x |Factor|)</name>
+    <x>10</x>
+    <y>725</y>
+    <width>980</width>
+    <height>115</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="12.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_107</name>
+    <text>Factor</text>
+    <x>25</x>
+    <y>750</y>
+    <width>50</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_108</name>
+    <pv_name>$(P):$(R):CONV_FACTOR</pv_name>
+    <x>75</x>
+    <y>750</y>
+    <width>130</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_109</name>
+    <text>Offset</text>
+    <x>220</x>
+    <y>750</y>
+    <width>50</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_110</name>
+    <pv_name>$(P):$(R):CONV_OFFSET</pv_name>
+    <x>270</x>
+    <y>750</y>
+    <width>130</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_111</name>
+    <text>Unit</text>
+    <x>415</x>
+    <y>750</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>textentry_112</name>
+    <pv_name>$(P):$(R):CONV_EGU</pv_name>
+    <x>455</x>
+    <y>750</y>
+    <width>80</width>
+    <show_units>false</show_units>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_113</name>
+    <pv_name>$(P):$(R):CONV_VAL</pv_name>
+    <x>560</x>
+    <y>745</y>
+    <width>415</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="16.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_114</name>
+    <text>Mean</text>
+    <x>25</x>
+    <y>790</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_115</name>
+    <pv_name>$(P):$(R):CONV_MEAN</pv_name>
+    <x>65</x>
+    <y>790</y>
+    <width>190</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_116</name>
+    <text>Std</text>
+    <x>265</x>
+    <y>790</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_117</name>
+    <pv_name>$(P):$(R):CONV_STD</pv_name>
+    <x>305</x>
+    <y>790</y>
+    <width>190</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_118</name>
+    <text>Min</text>
+    <x>505</x>
+    <y>790</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_119</name>
+    <pv_name>$(P):$(R):CONV_MIN</pv_name>
+    <x>545</x>
+    <y>790</y>
+    <width>190</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>label_120</name>
+    <text>Max</text>
+    <x>745</x>
+    <y>790</y>
+    <width>40</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>textupdate_121</name>
+    <pv_name>$(P):$(R):CONV_MAX</pv_name>
+    <x>785</x>
+    <y>790</y>
+    <width>190</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <format>1</format>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+</display>

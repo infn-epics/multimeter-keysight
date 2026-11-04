@@ -1,0 +1,129 @@
+# ================================================================
+# Keysight 34465A Truevolt 6½-digit DMM — StreamDevice protocol
+# ================================================================
+# Transport : raw SCPI socket, TCP port 5025 (LAN)
+# Framing   : commands and replies terminated by LF
+#
+# Protocol argument $1 = record name prefix ("$(P):$(R):").
+# Function-dependent commands build their SCPI subsystem from the
+# record $1FUNC_PFX (mbbi whose state strings are "VOLT:DC",
+# "CURR:AC", "RES", ...), e.g.  "VOLT:DC:RANG 10".
+# ================================================================
+
+OutTerminator = "\n";
+InTerminator  = "\n";
+ReplyTimeout  = 2000;
+ReadTimeout   = 200;
+# READ? may hold the port for up to 60 s, other records must wait for it
+LockTimeout   = 65000;
+ExtraInput    = Ignore;
+
+# ── Identification / housekeeping ────────────────────────────────
+
+getIdn {
+    out "*IDN?";
+    in "%39[^,],%(\$1IDN_MODEL)39[^,],%(\$1IDN_SERIAL)39[^,],%(\$1IDN_FW)39[^\n]";
+}
+
+# SYST:ERR? reply:  +0,"No error"   /  -113,"Undefined header"
+getError {
+    out "SYST:ERR?";
+    in "%(\$1ERR_CODE)d,\"%255[^\"]";
+}
+
+# Front/rear input terminal switch (physical switch, read only)
+getInputTerm { out "ROUT:TERM?"; in "%{FRON|REAR}"; }
+
+getIntTemp   { out "SYST:TEMP?"; in "%f"; }
+getLineFreq  { out "SYST:LFR?";  in "%f"; }
+
+reset        { out "*RST;*CLS"; }
+clear        { out "*CLS"; }
+abort        { out "ABOR"; }
+beep         { out "SYST:BEEP"; }
+
+setDisplay   { out "DISP %{OFF|ON}"; @init { out "DISP?"; in "%{0|1}"; } }
+getDisplay   { out "DISP?"; in "%{0|1}"; }
+setDispText  { out "DISP:TEXT \"%s\""; }
+clrDispText  { out "DISP:TEXT:CLE"; }
+
+# ── Measurement function ─────────────────────────────────────────
+# Index:  0 VOLT:DC  1 VOLT:AC  2 CURR:DC  3 CURR:AC  4 RES  5 FRES
+#         6 FREQ     7 PER      8 CONT     9 DIOD    10 TEMP 11 CAP
+# FUNC? replies the short form ("VOLT", "VOLT:AC", "CURR", ...), so
+# the longer alternatives must be listed before their prefixes.
+
+getFunc {
+    out "FUNC?";
+    in "\"%#{VOLT:AC=1|VOLT=0|CURR:AC=3|CURR=2|FRES=5|RES=4|FREQ=6|PER=7|CONT=8|DIOD=9|TEMP=10|CAP=11}\"";
+}
+
+setFunc {
+    out "FUNC \"%{VOLT:DC|VOLT:AC|CURR:DC|CURR:AC|RES|FRES|FREQ|PER|CONT|DIOD|TEMP|CAP}\"";
+    @init { getFunc; }
+}
+
+# ── Function-dependent settings (use $1FUNC_PFX) ─────────────────
+
+setRange     { out "%(\$1FUNC_PFX)s:RANG %g"; }
+getRange     { out "%(\$1FUNC_PFX)s:RANG?"; in "%f"; }
+
+setAutoRange { out "%(\$1FUNC_PFX)s:RANG:AUTO %{OFF|ON}"; }
+getAutoRange { out "%(\$1FUNC_PFX)s:RANG:AUTO?"; in "%{0|1}"; }
+
+# 0.001/0.002/0.006 PLC need the DIG option, not offered here
+setNplc      { out "%(\$1FUNC_PFX)s:NPLC %{0.02|0.06|0.2|1|10|100}"; }
+getNplc      { out "%(\$1FUNC_PFX)s:NPLC?"; in "%f"; }
+
+# ONCE performs one zero measurement and then reads back as OFF
+setAutoZero  { out "%(\$1FUNC_PFX)s:ZERO:AUTO %{OFF|ON|ONCE}"; }
+getAutoZero  { out "%(\$1FUNC_PFX)s:ZERO:AUTO?"; in "%{0|1}"; }
+
+setNull      { out "%(\$1FUNC_PFX)s:NULL:STAT %{OFF|ON}"; }
+getNull      { out "%(\$1FUNC_PFX)s:NULL:STAT?"; in "%{0|1}"; }
+setNullVal   { out "%(\$1FUNC_PFX)s:NULL:VAL %g"; }
+getNullVal   { out "%(\$1FUNC_PFX)s:NULL:VAL?"; in "%f"; }
+
+# Current input terminals: 3 A or 10 A jack (mbbo/mbbi RVAL = 3 / 10)
+setTerm      { out "%(\$1FUNC_PFX)s:TERM %d"; }
+getTerm      { out "%(\$1FUNC_PFX)s:TERM?"; in "%d"; }
+
+# DCV only: auto input impedance (ON = >10 GOhm on 100 mV..10 V ranges)
+setImpAuto   { out "VOLT:DC:IMP:AUTO %{OFF|ON}"; }
+getImpAuto   { out "VOLT:DC:IMP:AUTO?"; in "%{0|1}"; }
+
+# TEMP only: transducer type
+setTempType  { out "TEMP:TRAN:TYPE %{FRTD|RTD|FTH|THER|TC}"; }
+getTempType  { out "TEMP:TRAN:TYPE?"; in "%{FRTD|RTD|FTH|THER|TC}"; }
+
+# ── Trigger / sampling ───────────────────────────────────────────
+
+getTrigSrc   { out "TRIG:SOUR?"; in "%{IMM|EXT|BUS|INT}"; }
+setTrigSrc   { out "TRIG:SOUR %{IMM|EXT}"; }
+
+getTrigSlope { out "TRIG:SLOP?"; in "%{POS|NEG}"; }
+setTrigSlope { out "TRIG:SLOP %{POS|NEG}"; @init { getTrigSlope; } }
+
+getTrigDel   { out "TRIG:DEL?"; in "%f"; }
+setTrigDel   { out "TRIG:DEL %g"; }
+
+getTrigDelAuto { out "TRIG:DEL:AUTO?"; in "%{0|1}"; }
+setTrigDelAuto { out "TRIG:DEL:AUTO %{OFF|ON}"; @init { getTrigDelAuto; } }
+
+getTrigCount { out "TRIG:COUN?"; in "%f"; }
+setTrigCount { out "TRIG:COUN %d"; }
+
+getSampCount { out "SAMP:COUN?"; in "%d"; }
+setSampCount { out "SAMP:COUN %d"; @init { getSampCount; } }
+
+# ── Acquisition ──────────────────────────────────────────────────
+# READ? = INIT + FETC?.  Returns TRIG:COUN x SAMP:COUN readings as
+# a comma-separated list, e.g. "+1.23E-03,+1.25E-03".
+# Overload is reported as +/-9.9E+37.
+
+readArray {
+    Separator    = ",";
+    ReplyTimeout = 60000;
+    out "READ?";
+    in "%f";
+}
