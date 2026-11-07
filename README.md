@@ -96,6 +96,7 @@ values you need in the `dbLoadRecords` macros in `st.cmd`.
 | `LAST_ERR_CODE`, `LAST_ERR_MSG` | longin/lsi | Last non-zero SCPI error, latched |
 | `ERR_CODE`, `ERR_MSG` | longin/lsi | Live `SYST:ERR?` poll |
 | `CLEAR`, `RESET`, `ABORT`, `BEEP` | bo | `*CLS`, `*RST;*CLS`, `ABOR`, beep |
+| `STATE_FILE`, `STATE_RESTORE`, `STATE_CAT` | stringout/bo/lsi | Restore a saved `.sta` state; list files on the DMM |
 | `INPUT_TERM` | bi | Front/rear terminals switch |
 | `ASYN` | asyn | Port diagnostics / connection |
 
@@ -110,6 +111,12 @@ values you need in the `dbLoadRecords` macros in `st.cmd`.
 
 ## Notes
 
+- `STATE_RESTORE` loads `STATE_FILE` (default `STATE_1.sta`) from the DMM's
+  current folder. A failed restore does not alarm the record: check
+  `LAST_ERR_*`. Readbacks refresh afterwards, but setpoint records keep their
+  last written value. `.sta` files are saved from the instrument itself.
+- `STATE_CAT`, `ERR_MSG` and `LAST_ERR_MSG` are `lsi` long strings: read them
+  as `<PV>.VAL$` (`caget -S`), since the plain PV truncates at 40 characters.
 - `READ?` holds the port until all readings are taken (timeout 60 s).
   Keep `TRIG_COUNT × SAMP_COUNT × integration time` well below that and
   `TRIG_COUNT × SAMP_COUNT ≤ NELM`. With an external trigger that never

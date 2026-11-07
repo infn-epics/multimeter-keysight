@@ -42,6 +42,15 @@ clear        { out "*CLS"; }
 abort        { out "ABOR"; }
 beep         { out "SYST:BEEP"; }
 
+# Saved instrument states (*.sta) in the current MMEM folder.
+# *OPC? returns once the state is fully applied.
+restoreState {
+    ReplyTimeout = 20000;
+    out "MMEM:LOAD:STAT \"%(\$1STATE_FILE)s\";*OPC?";
+    in "%*d";
+}
+getCatalog   { out "MMEM:CAT?"; in "%1023[^\n]"; }
+
 setDisplay   { out "DISP %{OFF|ON}"; @init { out "DISP?"; in "%{0|1}"; } }
 getDisplay   { out "DISP?"; in "%{0|1}"; }
 setDispText  { out "DISP:TEXT \"%s\""; }

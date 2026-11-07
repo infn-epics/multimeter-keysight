@@ -179,6 +179,29 @@ record(bo, "$(P):$(R):DISP_TEXT_CLR") {
 }
 
 #-----------------------------------------------------------------
+# Saved instrument states (presets)
+#-----------------------------------------------------------------
+record(stringout, "$(P):$(R):STATE_FILE") {
+    field(DESC, "State file to restore")
+    field(VAL,  "$(STATE_FILE=STATE_1.sta)")
+}
+record(bo, "$(P):$(R):STATE_RESTORE") {
+    field(DESC, "Restore STATE_FILE on the DMM")
+    field(DTYP, "stream")
+    field(OUT,  "@keysight34465A.proto restoreState($(P):$(R):) $(PORT)")
+    field(ZNAM, "Restore")
+    field(ONAM, "Restore")
+    field(FLNK, "$(P):$(R):REFRESH")
+}
+record(lsi, "$(P):$(R):STATE_CAT") {
+    field(DESC, "Files on the DMM (MMEM:CAT?)")
+    field(DTYP, "stream")
+    field(INP,  "@keysight34465A.proto getCatalog $(PORT)")
+    field(PINI, "YES")
+    field(SIZV, "1024")
+}
+
+#-----------------------------------------------------------------
 # Measurement function
 #-----------------------------------------------------------------
 record(mbbo, "$(P):$(R):FUNC") {
